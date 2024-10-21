@@ -1,5 +1,6 @@
 import './bootstrap';
 import Vue from 'vue';
+import router from './router';
 
 /**
  * Vue Components
@@ -20,4 +21,5 @@ Vue.component('EditBook', () => import('./components/EditBook.vue'));
  */
 const app = new Vue({
     el: '#app',
+    router,
 });

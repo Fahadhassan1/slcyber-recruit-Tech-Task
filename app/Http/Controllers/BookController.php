@@ -11,6 +11,7 @@ use App\Http\Services\Book\Index;
 use App\Http\Services\Book\Store;
 use App\Http\Services\Book\Update;
 use App\Models\Book;
+use Illuminate\Support\Facades\Log;
 
 class BookController extends Controller
 {
@@ -22,6 +23,14 @@ class BookController extends Controller
         ]);
     }
 
+    public function show($id)
+    {
+        $book = Book::findOrFail($id);
+        return response()->json([
+            'message' => 'Successfully fetched the book.',
+            'data' => $book
+        ]);
+    }
     public function store(StoreRequest $request, Store $store)
     {
         $book = $store($request->validated());
@@ -32,8 +41,9 @@ class BookController extends Controller
         ]);
     }
 
-    public function update(UpdateRequest $request, Update $update, Book $bookToUpdate)
+    public function update(UpdateRequest $request, Update $update, $id)
     {
+        $bookToUpdate = Book::findOrFail($id);
         $updatedBook = $update($request->validated(), $bookToUpdate);
 
         return response()->json([

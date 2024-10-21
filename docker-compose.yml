@@ -27,8 +27,10 @@ services:
             - meilisearch
             - mailpit
             - selenium
+
     mysql:
         image: 'mysql/mysql-server:8.0'
+        platform: linux/amd64  # Add this line to force amd64 architecture
         ports:
             - '${FORWARD_DB_PORT:-3306}:3306'
         environment:
@@ -51,8 +53,10 @@ services:
                 - '-p${DB_PASSWORD}'
             retries: 3
             timeout: 5s
+
     redis:
         image: 'redis:alpine'
+        platform: linux/amd64  # Add this line to force amd64 architecture
         ports:
             - '${FORWARD_REDIS_PORT:-6379}:6379'
         volumes:
@@ -66,8 +70,10 @@ services:
                 - ping
             retries: 3
             timeout: 5s
+
     meilisearch:
         image: 'getmeili/meilisearch:latest'
+        platform: linux/amd64  # Add this line to force amd64 architecture if necessary
         ports:
             - '${FORWARD_MEILISEARCH_PORT:-7700}:7700'
         volumes:
@@ -83,6 +89,7 @@ services:
                 - 'http://localhost:7700/health'
             retries: 3
             timeout: 5s
+
     mailpit:
         image: 'axllent/mailpit:latest'
         ports:
@@ -90,14 +97,17 @@ services:
             - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025'
         networks:
             - sail
+
     selenium:
         image: selenium/standalone-chrome
+        platform: linux/amd64  # Add this line if Selenium doesn't have an ARM64 version
         extra_hosts:
             - 'host.docker.internal:host-gateway'
         volumes:
             - '/dev/shm:/dev/shm'
         networks:
             - sail
+
 networks:
     sail:
         driver: bridge
